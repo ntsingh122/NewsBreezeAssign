@@ -10,18 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public class NewsModel implements Serializable, Parcelable
-{
+public class NewsModel implements Serializable, Parcelable {
 
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("totalResults")
-    @Expose
-    private Integer totalResults;
-    @SerializedName("articles")
-    @Expose
-    private List<Article> articles = null;
     public final static Creator<NewsModel> CREATOR = new Creator<NewsModel>() {
 
 
@@ -36,9 +26,17 @@ public class NewsModel implements Serializable, Parcelable
             return (new NewsModel[size]);
         }
 
-    }
-            ;
+    };
     private final static long serialVersionUID = -2903543598617270610L;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("totalResults")
+    @Expose
+    private Integer totalResults;
+    @SerializedName("articles")
+    @Expose
+    private List<Article> articles = null;
 
     protected NewsModel(android.os.Parcel in) {
         this.status = ((String) in.readValue((String.class.getClassLoader())));
@@ -80,7 +78,7 @@ public class NewsModel implements Serializable, Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

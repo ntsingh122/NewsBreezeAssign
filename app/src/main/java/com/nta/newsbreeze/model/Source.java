@@ -1,22 +1,14 @@
-
 package com.nta.newsbreeze.model;
 
-import java.io.Serializable;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Source implements Serializable, Parcelable
-{
+import java.io.Serializable;
 
-    @SerializedName("id")
-    @Expose
-    private String id;
-    @SerializedName("name")
-    @Expose
-    private String name;
+public class Source implements Serializable, Parcelable {
+
     public final static Creator<Source> CREATOR = new Creator<Source>() {
 
 
@@ -31,9 +23,14 @@ public class Source implements Serializable, Parcelable
             return (new Source[size]);
         }
 
-    }
-            ;
+    };
     private final static long serialVersionUID = 4742013714498881215L;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
     protected Source(android.os.Parcel in) {
         this.id = ((String) in.readValue((String.class.getClassLoader())));
@@ -65,7 +62,7 @@ public class Source implements Serializable, Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

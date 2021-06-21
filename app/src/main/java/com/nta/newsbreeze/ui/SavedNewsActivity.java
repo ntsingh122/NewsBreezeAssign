@@ -1,12 +1,10 @@
 package com.nta.newsbreeze.ui;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.nta.newsbreeze.R;
 import com.nta.newsbreeze.adapter.SavedNewsAdapter;
@@ -32,10 +30,9 @@ public class SavedNewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_saved_news);
 
 
-
         mRecyclerView = findViewById(R.id.saved_news_rv);
         mAdapter = new SavedNewsAdapter(articlesList);
-        mLayoutManager  = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setAdapter(mAdapter);
@@ -46,7 +43,7 @@ public class SavedNewsActivity extends AppCompatActivity {
     private void loadSavedNews() {
         articleDao = ArticleDatabase.getArticleDBInstance(this).dao();
         articlesList = articleDao.getAllSavedNews();
-        if(articlesList != null)
+        if (articlesList != null)
             mAdapter.setNewsData(articlesList);
 
     }

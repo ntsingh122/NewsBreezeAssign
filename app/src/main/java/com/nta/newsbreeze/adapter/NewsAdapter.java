@@ -17,12 +17,12 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerFamily;
 import com.nta.newsbreeze.R;
-import com.nta.newsbreeze.ui.ReadingActivity;
 import com.nta.newsbreeze.database.ArticleDatabase;
 import com.nta.newsbreeze.database.DAO;
 import com.nta.newsbreeze.model.Article;
-import com.squareup.picasso.Callback;
+import com.nta.newsbreeze.ui.ReadingActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
     private List<Article> articles;
     private DAO articleDao;
+
     public NewsAdapter(List<Article> articlesList) {
         this.articles = articlesList;
 
@@ -37,43 +38,43 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @NonNull
     @Override
-    public NewsViewHolder onCreateViewHolder(@NonNull  ViewGroup parent, int viewType) {
+    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.news_rv_layout, parent, false);
         return new NewsViewHolder(itemView);
+    }
+
+    private void setupCorners(ShapeableImageView imageView) {
+        imageView.setShapeAppearanceModel(
+                imageView.getShapeAppearanceModel()
+                        .toBuilder()
+                        .setAllCorners(CornerFamily.ROUNDED, 25.0f)
+                        .build()
+        );
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsAdapter.NewsViewHolder holder, int position) {
         Article article = articles.get(position);
         holder.headline.setText(article.getTitle());
+        setupCorners(holder.thumbImageView);
         holder.content.setText(article.getDescription());
         holder.saveNewsImageButton.setChecked(isSaved(holder.mContext, article));
         holder.date.setText(article.getPublishedAt());
         //setting image
-        Picasso.get().load(article.getUrlToImage()).fit().centerCrop().into(holder.thumbImageView, new Callback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+        Picasso.get().load(article.getUrlToImage()).fit().centerCrop().into(holder.thumbImageView);
         //opening news article
-        holder.readButton.setOnClickListener(view -> openArticle(holder,article));
+        holder.readButton.setOnClickListener(view -> openArticle(holder, article));
 
         //saving news article
 
 
         holder.saveNewsImageButton.setOnClickListener(view -> {
-            if(isSaved(holder.mContext,article))
-                deleteArticle(holder,article);
+            if (isSaved(holder.mContext, article))
+                deleteArticle(holder, article);
 
             else
-                saveArticle(holder,article);
+                saveArticle(holder, article);
 
         });
 
@@ -81,9 +82,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private void deleteArticle(NewsViewHolder holder, Article article) {
 
-        SharedPreferences preferences =  holder.mContext.getSharedPreferences("state",Context.MODE_PRIVATE);
+        SharedPreferences preferences = holder.mContext.getSharedPreferences("state", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("buttonState"+article.getUrl(),false);
+        editor.putBoolean("buttonState" + article.getUrl(), false);
         editor.apply();
 
         articleDao = ArticleDatabase.getArticleDBInstance(holder.mContext).dao();
@@ -92,16 +93,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
 
     private boolean isSaved(Context mContext, Article article) {
-        SharedPreferences preferences =  mContext.getSharedPreferences("state",Context.MODE_PRIVATE);
-        return preferences.getBoolean("buttonState"+article.getUrl(),false);
+        SharedPreferences preferences = mContext.getSharedPreferences("state", Context.MODE_PRIVATE);
+        return preferences.getBoolean("buttonState" + article.getUrl(), false);
 
     }
 
     private void saveArticle(NewsViewHolder holder, Article article) {
 
-        SharedPreferences preferences =  holder.mContext.getSharedPreferences("state",Context.MODE_PRIVATE);
+        SharedPreferences preferences = holder.mContext.getSharedPreferences("state", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("buttonState"+article.getUrl(),true);
+        editor.putBoolean("buttonState" + article.getUrl(), true);
         editor.apply();
 
 //        article.setButtonState(true);
@@ -119,8 +120,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     }
 
-    public void setNewsData(List<Article> articles){
-        this.articles =  articles;
+    public void setNewsData(List<Article> articles) {
+        this.articles = articles;
         notifyDataSetChanged();
     }
 
@@ -130,16 +131,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
-        private Context mContext;
-        private ShapeableImageView thumbImageView;
-        private ToggleButton saveNewsImageButton;
-        private Button readButton;
-        private TextView headline,content,date;
-        private CardView newsCardView;
+        private final Context mContext;
+        private final ShapeableImageView thumbImageView;
+        private final ToggleButton saveNewsImageButton;
+        private final Button readButton;
+        private final TextView headline;
+        private final TextView content;
+        private final TextView date;
+        private final CardView newsCardView;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
-            mContext= itemView.getContext();
+            mContext = itemView.getContext();
             thumbImageView = itemView.findViewById(R.id.news_img_iv);
             saveNewsImageButton = itemView.findViewById(R.id.save_img_btn);
             readButton = itemView.findViewById(R.id.read_btn);

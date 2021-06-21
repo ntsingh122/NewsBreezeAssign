@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
     android:elevation="4dp"
+    app:cardCornerRadius="12dp"
     android:layout_marginHorizontal="6dp"
     android:backgroundTint="@color/grey"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -21,11 +22,11 @@
         android:src="@mipmap/ic_image_off"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="150dp"/>
+
     <ToggleButton
         android:id="@+id/save_img_btn"
         android:layout_width="32dp"
         android:layout_height="32dp"
-
         android:background="@drawable/save_button"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,11 +1,6 @@
 package com.nta.newsbreeze.model;
 
-import java.io.Serializable;
-
-
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
-import android.os.Parcelable.Creator;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -14,52 +9,11 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 @Entity(tableName = "Articles")
-public class Article implements Serializable, Parcelable
-{
+public class Article implements Serializable, Parcelable {
 
-
-    @PrimaryKey(autoGenerate = true)
-    int artId;
-
-    @ColumnInfo(name = "author")
-    @SerializedName("author")
-    @Expose
-    private String author;
-
-    @ColumnInfo(name = "title")
-    @SerializedName("title")
-    @Expose
-    private String title;
-
-    @ColumnInfo(name = "description")
-    @SerializedName("description")
-    @Expose
-    private String description;
-
-    @ColumnInfo(name = "url")
-    @SerializedName("url")
-    @Expose
-    private String url;
-
-    @ColumnInfo(name = "urlToImage")
-    @SerializedName("urlToImage")
-    @Expose
-    private String urlToImage;
-
-    @ColumnInfo(name = "publishedAt")
-    @SerializedName("publishedAt")
-    @Expose
-    private String publishedAt;
-
-    @ColumnInfo(name = "content")
-    @SerializedName("content")
-    @Expose
-    private String content;
-
-    @ColumnInfo(name = "buttonState")
-    @SerializedName("buttonState")
-    private Boolean buttonState;
 
     public final static Creator<Article> CREATOR = new Creator<Article>() {
 
@@ -75,9 +29,41 @@ public class Article implements Serializable, Parcelable
             return (new Article[size]);
         }
 
-    }
-            ;
+    };
     private final static long serialVersionUID = -970323314293711197L;
+    @PrimaryKey(autoGenerate = true)
+    int artId;
+    @ColumnInfo(name = "author")
+    @SerializedName("author")
+    @Expose
+    private String author;
+    @ColumnInfo(name = "title")
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @ColumnInfo(name = "description")
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @ColumnInfo(name = "url")
+    @SerializedName("url")
+    @Expose
+    private String url;
+    @ColumnInfo(name = "urlToImage")
+    @SerializedName("urlToImage")
+    @Expose
+    private String urlToImage;
+    @ColumnInfo(name = "publishedAt")
+    @SerializedName("publishedAt")
+    @Expose
+    private String publishedAt;
+    @ColumnInfo(name = "content")
+    @SerializedName("content")
+    @Expose
+    private String content;
+    @ColumnInfo(name = "buttonState")
+    @SerializedName("buttonState")
+    private Boolean buttonState;
 
     protected Article(android.os.Parcel in) {
 //        this.source = ((Source) in.readValue((Source.class.getClassLoader())));
@@ -143,7 +129,7 @@ public class Article implements Serializable, Parcelable
     }
 
     public String getPublishedAt() {
-        return publishedAt.substring(0,10);
+        return publishedAt.substring(0, 10);
     }
 
     public void setPublishedAt(String publishedAt) {
@@ -179,7 +165,7 @@ public class Article implements Serializable, Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
     public Boolean getButtonState() {

@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.nta.newsbreeze.R;
-import com.nta.newsbreeze.ui.ReadingActivity;
 import com.nta.newsbreeze.database.ArticleDatabase;
 import com.nta.newsbreeze.database.DAO;
 import com.nta.newsbreeze.model.Article;
+import com.nta.newsbreeze.ui.ReadingActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +29,7 @@ import java.util.List;
 public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.SavedNewsViewHolder> {
     private List<Article> articles;
     private DAO articleDao;
+
     public SavedNewsAdapter(List<Article> articlesList) {
         this.articles = articlesList;
 
@@ -36,7 +37,7 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
 
     @NonNull
     @Override
-    public SavedNewsViewHolder onCreateViewHolder(@NonNull  ViewGroup parent, int viewType) {
+    public SavedNewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.saved_news_rv_layout, parent, false);
         return new SavedNewsViewHolder(itemView);
@@ -61,21 +62,21 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
             }
         });
         //opening news article
-        holder.readButton.setOnClickListener(view -> openArticle(holder,article));
+        holder.readButton.setOnClickListener(view -> openArticle(holder, article));
 //        holder.deleteNewsImageButton.setVisibility(View.GONE);
-        holder.deleteNewsImageButton.setOnClickListener(view -> deleteArticle(holder,article,position));
+        holder.deleteNewsImageButton.setOnClickListener(view -> deleteArticle(holder, article, position));
 
 
     }
 
-    private void deleteArticle(SavedNewsViewHolder holder, Article article,int position) {
+    private void deleteArticle(SavedNewsViewHolder holder, Article article, int position) {
 
         articleDao = ArticleDatabase.getArticleDBInstance(holder.mContext).dao();
         articleDao.deleteArticle(article.getUrl());
 //        articles.remove(position);
-        SharedPreferences preferences =  holder.mContext.getSharedPreferences("state",Context.MODE_PRIVATE);
+        SharedPreferences preferences = holder.mContext.getSharedPreferences("state", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("buttonState"+article.getUrl(),false);
+        editor.putBoolean("buttonState" + article.getUrl(), false);
         editor.apply();
 
         notifyItemRemoved(position);
@@ -91,8 +92,8 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
 
     }
 
-    public void setNewsData(List<Article> articles){
-        this.articles =  articles;
+    public void setNewsData(List<Article> articles) {
+        this.articles = articles;
         notifyDataSetChanged();
     }
 
@@ -102,16 +103,18 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
     }
 
     public class SavedNewsViewHolder extends RecyclerView.ViewHolder {
-        private Context mContext;
-        private ShapeableImageView thumbImageView;
-        private ImageButton deleteNewsImageButton;
-        private Button readButton;
-        private TextView headline,content,date;
+        private final Context mContext;
+        private final ShapeableImageView thumbImageView;
+        private final ImageButton deleteNewsImageButton;
+        private final Button readButton;
+        private final TextView headline;
+        private final TextView content;
+        private final TextView date;
         private CardView newsCardView;
 
         public SavedNewsViewHolder(@NonNull View itemView) {
             super(itemView);
-            mContext= itemView.getContext();
+            mContext = itemView.getContext();
             thumbImageView = itemView.findViewById(R.id.saved_news_img_iv);
             deleteNewsImageButton = itemView.findViewById(R.id.saved_news_delete_img_btn);
             readButton = itemView.findViewById(R.id.saved_news_read_btn);
