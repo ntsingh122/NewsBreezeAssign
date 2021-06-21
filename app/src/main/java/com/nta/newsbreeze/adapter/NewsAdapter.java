@@ -17,6 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerFamily;
 import com.nta.newsbreeze.R;
 import com.nta.newsbreeze.ui.ReadingActivity;
 import com.nta.newsbreeze.database.ArticleDatabase;
@@ -43,25 +44,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         return new NewsViewHolder(itemView);
     }
 
+    private void setupCorners(ShapeableImageView imageView) {
+        imageView.setShapeAppearanceModel(
+                imageView.getShapeAppearanceModel()
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED,25.0f)
+                .build()
+        );
+    }
+
     @Override
     public void onBindViewHolder(@NonNull NewsAdapter.NewsViewHolder holder, int position) {
         Article article = articles.get(position);
         holder.headline.setText(article.getTitle());
+        setupCorners(holder.thumbImageView);
         holder.content.setText(article.getDescription());
         holder.saveNewsImageButton.setChecked(isSaved(holder.mContext, article));
         holder.date.setText(article.getPublishedAt());
         //setting image
-        Picasso.get().load(article.getUrlToImage()).fit().centerCrop().into(holder.thumbImageView, new Callback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+        Picasso.get().load(article.getUrlToImage()).fit().centerCrop().into(holder.thumbImageView);
         //opening news article
         holder.readButton.setOnClickListener(view -> openArticle(holder,article));
 

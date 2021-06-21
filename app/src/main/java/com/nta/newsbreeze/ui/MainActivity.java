@@ -7,18 +7,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.nta.newsbreeze.R;
 import com.nta.newsbreeze.adapter.NewsAdapter;
 import com.nta.newsbreeze.model.Article;
 import com.nta.newsbreeze.model.NewsModel;
 import com.nta.newsbreeze.remote.ApiUtils;
+import com.nta.newsbreeze.repository.NewsArticleRepo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +43,19 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager mLayoutManager;
     private NewsAdapter mAdapter;
     private ProgressBar progressBar;
+    private EditText searchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = findViewById(R.id.my_toolbar);
-//        setSupportActionBar(toolbar);
+        searchText = findViewById(R.id.search_box);
+        progressBar = findViewById(R.id.progress_circular_bar);
+
+        setupSearchBox();
 
         loadNews();
-        progressBar = findViewById(R.id.progress_circular_bar);
+
         mRecyclerView = findViewById(R.id.rv_news);
         mAdapter = new NewsAdapter(articlesList);
         mLayoutManager  = new LinearLayoutManager(this);
@@ -54,6 +66,55 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setupSearchBox() {
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    getTextFromSearchBox(searchText);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+    }
+
+    private void getTextFromSearchBox(EditText searchText) {
+        if (!TextUtils.isEmpty(searchText.getText())) {
+            try {
+                searchQuery(searchText.getText());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else
+            Toast.makeText(this, "Please Enter Search Text", Toast.LENGTH_SHORT).show();
+    }
+
+    private void searchQuery(Editable text) {
+        progressBar.setVisibility(View.VISIBLE);
+        ApiUtils.getAPIService().searchNewsHeadlines(text.toString(),getString(R.string.apiKey),20).enqueue(new Callback<NewsModel>() {
+            @Override
+            public void onResponse(Call<NewsModel> call, Response<NewsModel> response) {
+                if (response.body().getStatus().equalsIgnoreCase("ok") && !response.body().getArticles().isEmpty()){
+                    articlesList = response.body().getArticles();
+                    mAdapter.setNewsData(articlesList);
+                    progressBar.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<NewsModel> call, Throwable t) {
+//                Snackbar.make(mRecyclerView,"Failed"+t.getLocalizedMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     private void loadNews() {
         articlesList = new ArrayList<>();
         ApiUtils.getAPIService().getNewsHeadlines("in",getString(R.string.apiKey)).enqueue(new Callback<NewsModel>() {
@@ -61,10 +122,12 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<NewsModel> call, @NonNull Response<NewsModel> response) {
                 if (response.body().getStatus()=="error")
                     onFailure(call,new Throwable("unable to fetch data"));
-                else
+                else {
+//                    NewsArticleRepo.getInstance().storeArticle(response.body());
                     articlesList = response.body().getArticles();
+                }
                 mAdapter.setNewsData(articlesList);
-                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.INVISIBLE);
 //                Toast.makeText(MainActivity.this, "loaded successfully", Toast.LENGTH_SHORT).show();
             }
 

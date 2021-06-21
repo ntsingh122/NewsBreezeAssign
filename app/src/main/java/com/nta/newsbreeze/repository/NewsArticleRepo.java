@@ -1,14 +1,11 @@
 package com.nta.newsbreeze.repository;
 
-import com.nta.newsbreeze.model.Article;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nta.newsbreeze.model.NewsModel;
 
 public class NewsArticleRepo {
     private static volatile NewsArticleRepo ourInstance;
 
-    private Article article;
+    private NewsModel newsArticle;
 
     private NewsArticleRepo() {
     }
@@ -23,8 +20,8 @@ public class NewsArticleRepo {
     }
 
 
-    public void storeArticle(Article article) {
-        this.article = article;
+    public void storeArticle(NewsModel article) {
+        this.newsArticle = article;
 
     }
 
@@ -33,9 +30,9 @@ public class NewsArticleRepo {
         return ourInstance != null;
     }
 
-    public Article getArticle() {
-        if (article == null)
-            return new Article();
-        return article;
+    public NewsModel getArticle() {
+        if (newsArticle == null)
+            return new NewsModel();
+        return newsArticle;
     }
 }

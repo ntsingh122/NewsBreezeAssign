@@ -15,6 +15,9 @@ public interface APIService {
     @GET("v2/top-headlines")
     Call<NewsModel> getNewsHeadlines(@Query("country") String country,@Query("apiKey") String apiKey  );
 
+    @GET("v2/everything")
+    Call<NewsModel> searchNewsHeadlines(@Query("qInTitle") String queryInTitle,@Query("apiKey") String apiKey ,@Query("pageSize") int pageSize  );
+
 
 
 
