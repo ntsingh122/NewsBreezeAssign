@@ -10,7 +10,7 @@ It also hase search feature to search news based on keywords present in news.<br
 - ##### Home
 <img src="app.gif" width="40%">
 
-
+[Link to Demo Apk!](https://github.com/ntsingh122/NewsBreezeAssign/blob/master/News-Assign.apk)
 
 #### Libraries
 - [Google gson](https://github.com/google/gson) For parsing JSON data
